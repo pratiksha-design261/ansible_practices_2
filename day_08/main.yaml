@@ -1,0 +1,36 @@
+---
+- hosts: all
+  become: true
+  #gather_facts: false
+
+  tasks:
+    - name: make sure the pacakges openssh and openssl are uptodate
+      ansible.builtin.apt:
+        name: "{{ item }}"
+        state: latest
+      loop:
+        - openssh
+        - openssl
+      ignore_errors: yes
+    
+    - name: verify if docker is install
+      ansible.builtin.command: docker --version
+      register: dockerVersionOutput
+      ignore_errors: yes
+    - ansible.builtin.debug:
+        var: dockerVersionOutput
+
+    - name: install docker
+      ansible.builtin.apt:
+          name: docker.io
+          state: present
+      when:
+        dockerVersionOutput.failed
+
+# defining error concept
+    - name: list down objs
+      ansible.builtin.command: ls ~/pratiksha
+      register: result
+      failed_when:
+        - result.rc == 0
+        - '"No Such" not in result.stdout'        

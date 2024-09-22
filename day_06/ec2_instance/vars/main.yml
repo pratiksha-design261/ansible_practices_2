@@ -1,0 +1,5 @@
+---
+# vars file for ec2_instance
+type: t2.micro
+region: us-east-2
+instance_name: "ansible-galxy-node-var-instance"
